@@ -131,7 +131,6 @@ local function numToDisplay(num)
     local counter = 1
 
     for k, v in pairs(arr) do
-        print(counter)
         local n = math.abs(k - #arr) + 1
         if counter % 3 == 0 and counter ~= #arr then
             result[n] = "."..arr[counter]
@@ -238,12 +237,11 @@ local function updateEnergyText(monitor, energy, capacity)
         monitor.setCursorPos(19, 7)
         monitor.write(numToDisplayAbb(capacity))
     else
-        local energy_len = string.len(numToDisplay(energy))
         local capacity_len = string.len(numToDisplay(capacity))
 
-        local middle = 16 + capacity_len / 4
+        local middle = 16
     
-        local middle_capacity = 16 + capacity_len / 2
+        local middle_capacity = 16 + capacity_len / 2 - 1
 
         monitor.setCursorPos(middle, 5)
         monitor.write(numToDisplay(energy))
