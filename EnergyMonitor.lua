@@ -18,6 +18,11 @@ RF_DISPLAY_MAP = {
 "K","M", "B", "T"
 }
 
+VALID_ENERGY_TYPES = {
+    "RF", "EU"
+}
+
+
 RF_CELL_TYPE = {
     "Basic Energy Cube",
     "Advanced Energy Cube",
@@ -326,6 +331,9 @@ local function initprogram()
     print("")
     if peripheral.find("monitor") == nil then error(" /!\\ No monitor found!") end
     if cells == nil then error(" /!\\ No energy cells found!") end
+    if not tableContains(VALID_ENERGY_TYPES, EnergyType) then 
+        error(" /!\\ Enter a valid energy type!")
+    end
 
     print(" * Found energy cells: ("..#cells..")")
     for k, v in pairs(cells) do
