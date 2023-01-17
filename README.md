@@ -18,3 +18,4 @@ How to install:
  3. Navigate to your computercraft folder in your world save. (can also be named computer)
  4. Drop the files inside the computer folder of your choice. (the folder name is the computer id)
  5. Files update in real-time, no need to reload your world.
+ 6. Configure the program to your desire; to edit, enter ``edit EnergyMonitorConfig.lua`` to the console, save your changes.
