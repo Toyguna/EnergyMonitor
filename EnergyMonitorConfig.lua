@@ -1,6 +1,6 @@
 {
     Abbreviations = false,
-    -- Appicable values: RF, EU
+    -- Valid values: RF, EU
     -- EnergyType also affects detected cells.
     EnergyType = "RF"
 }
