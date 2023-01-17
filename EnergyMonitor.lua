@@ -18,14 +18,13 @@ RF_DISPLAY_MAP = {
 "K","M", "B", "T"
 }
 
-RF_CELL_TYPE = {
-    "Basic Energy Cube",
-    "Advanced Energy Cube",
-    "Elite Energy Cube",
-    "Ultimate Energy Cube",
-    "Creative Energy Cube",
+VALID_ENERGY_TYPES = {
+    "RF", "EU"
+}
 
-    "thermalexpansion:storage_cell"
+RF_CELL_TYPE = {
+    "thermal:energy_cell",
+    "powah:energy_cell"
 }
 
 EU_CELL_TYPE = {
@@ -36,15 +35,11 @@ EU_CELL_TYPE = {
 }
 
 RF_CELL_METHOD_T01 = {
-    "Basic Energy Cube",
-    "Advanced Energy Cube",
-    "Elite Energy Cube",
-    "Ultimate Energy Cube",
-    "Creative Energy Cube"
+    "thermal:energy_cell",
+    "powah:energy_cell"
 }
 
 RF_CELL_METHOD_T02 = {
-    "thermalexpansion:storage_cell"
 }
 
 -- Functions --
@@ -131,7 +126,6 @@ local function numToDisplay(num)
     local counter = 1
 
     for k, v in pairs(arr) do
-        print(counter)
         local n = math.abs(k - #arr) + 1
         if counter % 3 == 0 and counter ~= #arr then
             result[n] = "."..arr[counter]
@@ -156,10 +150,6 @@ local function getTotalEnergy(cells)
             if tableContains(RF_CELL_METHOD_T01, t) then
                 total_energy = total_energy + v_wrap.getEnergy()
             end
-
-            if tableContains(RF_CELL_METHOD_T02, t) then
-                total_energy = total_energy + v_wrap.getRFStored()
-            end
         end
     end
 
@@ -182,11 +172,7 @@ local function getTotalEnergyCapacity(cells)
             local v_wrap = peripheral.wrap(v)
 
             if tableContains(RF_CELL_METHOD_T01, t) then
-                total_capacity = total_capacity + v_wrap.getMaxEnergy()
-            end
-
-            if tableContains(RF_CELL_METHOD_T02, t) then
-                total_capacity = total_capacity + v_wrap.getRFCapacity()
+                total_capacity = total_capacity + v_wrap.getEnergyCapacity()
             end
         end
     end
@@ -238,12 +224,11 @@ local function updateEnergyText(monitor, energy, capacity)
         monitor.setCursorPos(19, 7)
         monitor.write(numToDisplayAbb(capacity))
     else
-        local energy_len = string.len(numToDisplay(energy))
         local capacity_len = string.len(numToDisplay(capacity))
 
-        local middle = 16 + capacity_len / 4
+        local middle = 16
     
-        local middle_capacity = 16 + capacity_len / 2
+        local middle_capacity = 16 + capacity_len / 2 - 1
 
         monitor.setCursorPos(middle, 5)
         monitor.write(numToDisplay(energy))
@@ -326,8 +311,12 @@ local function initprogram()
     findCells()
 
     print("")
+
     if peripheral.find("monitor") == nil then error(" /!\\ No monitor found!") end
     if cells == nil then error(" /!\\ No energy cells found!") end
+    if not tableContains(VALID_ENERGY_TYPES, EnergyType) then 
+        error(" /!\\ Enter a valid energy type!")
+    end
 
     print(" * Found energy cells: ("..#cells..")")
     for k, v in pairs(cells) do
